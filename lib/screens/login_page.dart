@@ -1,8 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:todo_list/screens/admin/allBook_page.dart';
 
 import 'home_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -12,9 +15,34 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
   bool obscurePassword = true;
   @override
   Widget build(BuildContext context) {
+    Future<void> login() async {
+      if (passwordController.text.isNotEmpty &&
+          emailController.text.isNotEmpty) {
+        var response = await http.post(
+            Uri.parse("http://192.168.180.232:5000/api/users/login"),
+            body: ({
+              'email': emailController.text,
+              'password': passwordController.text
+            }));
+        debugPrint(response.body);
+        if (response.statusCode == 200) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: ((context) => AllBook())));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Invalid credential")));
+        }
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Back field is not allowed")));
+      }
+    }
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -52,6 +80,7 @@ class _LoginState extends State<Login> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     child: TextFormField(
+                      controller: emailController,
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
@@ -76,6 +105,7 @@ class _LoginState extends State<Login> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     child: TextFormField(
+                      controller: passwordController,
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
@@ -110,7 +140,9 @@ class _LoginState extends State<Login> {
                     child: FlatButton(
                       color: Theme.of(context).primaryColor,
                       textColor: Colors.white,
-                      onPressed: () {},
+                      onPressed: () {
+                        login();
+                      },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                       child: const Text(
