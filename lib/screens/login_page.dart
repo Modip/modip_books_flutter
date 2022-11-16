@@ -24,12 +24,12 @@ class _LoginState extends State<Login> {
       if (passwordController.text.isNotEmpty &&
           emailController.text.isNotEmpty) {
         var response = await http.post(
-            Uri.parse("http://192.168.180.232:5000/api/users/login"),
+            Uri.parse("http://10.153.134.203:5000/api/users/login"),
             body: ({
               'email': emailController.text,
               'password': passwordController.text
             }));
-        debugPrint(response.body);
+        //debugPrint(response.body);
         if (response.statusCode == 200) {
           Navigator.push(
               context, MaterialPageRoute(builder: ((context) => AllBook())));
@@ -55,7 +55,7 @@ class _LoginState extends State<Login> {
                   const Icon(
                     Icons.menu_book,
                     color: Colors.blueGrey,
-                    size: 200,
+                    size: 160,
                   ),
                   const SizedBox(height: 10),
                   const Text(
@@ -75,7 +75,7 @@ class _LoginState extends State<Login> {
                         fontWeight: FontWeight.w600,
                         color: Colors.blueGrey),
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -152,7 +152,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   const SizedBox(
-                    height: 30,
+                    height: 15,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

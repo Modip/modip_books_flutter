@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
+import 'package:todo_list/models/books.dart';
+import 'package:todo_list/screens/admin/addBook_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,98 +10,80 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void getBooks() async {
-    http.Response responseData = await http
-        .get((Uri.parse("http://192.168.1.24:5000/api/books/allbooks")));
-    debugPrint(responseData.body);
-  }
-
-  List<String> responseData = [
-    "Nation Nègre",
-    "Une vie de boy"
-
-  ];
-  String text = "";
-
+  Books booksService = Books();
   @override
-  void initState() {
-    super.initState();
-    getBooks();
-  }
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Modip Books"),
+        title: Text(" Modip Books"),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AddBookPage()));
+            },
+            icon: const Icon(Icons.add_card_outlined, color: Colors.white70),
+          ),
+        ],
       ),
-      body: ListView.builder(
-        itemCount: responseData.length,
-        itemBuilder: (context, index) {
-          return Card(
-            color: Theme.of(context).primaryColor,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: ListTile(
-                title: Text(
-                  responseData[index],
-                  style: const TextStyle(fontSize: 20, color: Colors.white),
-                ),
-                subtitle: Text(
-                  responseData[index]
-                ),
-                trailing: SizedBox(
-                  width: 60,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: IconButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) => SimpleDialog(
-                                      children: [
-                                        TextField(
-                                          onChanged: (value) {
-                                            setState(() {
-                                              text = value;
-                                            });
-                                          },
-                                        ),
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                responseData[index] = text;
-                                              });
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text("Update"))
-                                      ],
-                                    ));
-                          },
-                          icon: const Icon(Icons.edit, color: Colors.white),
+      body: Container(
+        padding: const EdgeInsets.all(10),
+        child: FutureBuilder<List>(
+          future: booksService.getAllBooks(),
+          builder: (context, snapshot) {
+            //print(snapshot.data);
+            if (snapshot.hasData) {
+              return ListView.builder(
+                  itemCount: snapshot.data?.length,
+                  itemBuilder: (context, i) {
+                    return Card(
+                      color: Theme.of(context).primaryColor,
+                      child: ListTile(
+                        title: Text(
+                          snapshot.data![i]['title'],
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w800),
                         ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              responseData.removeAt(index);
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.delete,
-                            color: Colors.white70,
+                        subtitle: Text(
+                          snapshot.data![i]['autor'],
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        trailing: SizedBox(
+                          width: 60,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.edit,
+                                      color: Colors.white70),
+                                ),
+                              ),
+                              Expanded(
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.orangeAccent,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
+                    );
+                  });
+            } else {
+              return const Center(
+                child: Text("No data found"),
+              );
+            }
+          },
+        ),
       ),
     );
   }

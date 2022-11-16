@@ -9,11 +9,23 @@ class AddBookPage extends StatefulWidget {
 }
 
 class _AddBookPageState extends State<AddBookPage> {
-  late String _bookname, _category, _description;
+  final _formKey = GlobalKey<FormState>();
+  Map bookdatas = {
+    "bookname": "",
+    "bookauteur": "",
+    "bookcategory": "",
+    "bookdescription": ""
+  };
+
+  addBook() {
+    _formKey.currentState!.save();
+    if(_formKey.currentState!.validate()){
+      
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var addBook = () {};
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
@@ -24,7 +36,7 @@ class _AddBookPageState extends State<AddBookPage> {
                 const Icon(
                   Icons.menu_book,
                   color: Colors.blueGrey,
-                  size: 200,
+                  size: 160,
                 ),
                 const SizedBox(height: 10),
                 const Text(
@@ -38,7 +50,7 @@ class _AddBookPageState extends State<AddBookPage> {
                   height: 10,
                 ),
                 const Text(
-                  "Add Book",
+                  "Ajouter un livre",
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -60,7 +72,31 @@ class _AddBookPageState extends State<AddBookPage> {
                         Icons.library_books,
                         size: 30,
                       ),
-                      labelText: "Book Name",
+                      labelText: "Nom du livre",
+                      labelStyle: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: TextFormField(
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      prefixIcon: const Icon(
+                        Icons.person_outline,
+                        size: 30,
+                      ),
+                      labelText: "Nom de l'auteur",
                       labelStyle: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.w600),
                     ),
@@ -84,7 +120,7 @@ class _AddBookPageState extends State<AddBookPage> {
                         Icons.category_outlined,
                         size: 30,
                       ),
-                      labelText: "Category",
+                      labelText: "Catégorie",
                       labelStyle: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.w600),
                     ),

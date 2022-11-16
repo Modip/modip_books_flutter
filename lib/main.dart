@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list/screens/admin/addBook_page.dart';
-import 'package:todo_list/screens/admin/allBook_page.dart';
+import 'package:todo_list/screens/home_page.dart';
 import 'screens/login_page.dart';
 
 void main() {
@@ -19,10 +18,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
       ),
       debugShowCheckedModeBanner: false,
-      //home: const AddBookPage(),
-      //home: const HomePage(),
-      home: const Login(),
-      // home: const AllBook(),
+      home: const HomePage(),
+      //home: const TestBook(),
     );
   }
 }
